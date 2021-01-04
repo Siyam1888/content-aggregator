@@ -1,0 +1,6 @@
+- Use Django or Flask
+- Scrape different content websites latest contents 
+- Use requests and BeautifulSoup
+- learn and use celery, apsheduler for background processes
+- save the data to a database
+- make a nice looking ui
