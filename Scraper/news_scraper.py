@@ -36,3 +36,22 @@ class Scraper:
         soup = BeautifulSoup(response.content, "html.parser")
         top_news_div = soup.find("div", {"class": "col-xs-12 top_news"})
         mid_news_div = soup.find("div", {"class": "col-xs-12 mid_news"})
+
+
+
+    def scrape_prathamalo(self):
+        pass
+
+
+    def scrape_jugantor(self):
+        pass
+
+
+    def scrape_dailystar(self):
+        pass
+
+    
+    def scrape_dailysun(self):
+        pass
+
+    

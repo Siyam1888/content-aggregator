@@ -1,5 +1,5 @@
 ## Task 1
-- [ ] Select some news websites to scrape
+- [x] Select some news websites to scrape
 - [ ] use reuquests and BeautifulSoup to scrape the data
 - [ ] Save the data to a database 
     1. Sources Table: Source id, source_name, source_news
