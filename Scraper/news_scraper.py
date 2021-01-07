@@ -34,8 +34,24 @@ class Scraper:
     def scrape_kalerkantha(self):
         response = self.get_response(self.news_urls["kalerkantha"])
         soup = BeautifulSoup(response.content, "html.parser")
-        top_news_div = soup.find("div", {"class": "col-xs-12 top_news"})
-        mid_news_div = soup.find("div", {"class": "col-xs-12 mid_news"})
+        
+        # Top news
+        top_news_div_grp = soup.find("div", {"class": "col-xs-12 top_news"})
+        top_news_div = top_news_div_grp.find('div', {'class': 'col-xs-12 col-sm-12 col-md-6 summary'})
+        top_news = {'headline': top_news_div.a.text, 'link': top_news_div.a.attrs['href'], 'summary': top_news_div.p.text}
+
+        # Mid news
+        mid_news_div_grp = soup.find("div", {"class": "col-xs-12 mid_news"})
+        mid_news_divs = mid_news_div_grp.findAll('div', {'class': 'col-xs-12 col-sm-6 col-md-6 n_row'})
+
+        news_list = [top_news]
+
+        # adding the mid news to the list
+        for div in mid_news_divs:
+            news = {'heading': div.a.text, 'link': div.a.attrs['href'], 'summary': div.p.text}
+            news_list.append(news)
+        
+        return news_list
 
 
 
@@ -55,3 +71,5 @@ class Scraper:
         pass
 
     
+s = Scraper()
+print(s.scrape_kalerkantha())
