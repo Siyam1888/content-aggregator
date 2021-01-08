@@ -21,7 +21,7 @@ class Scraper:
         ]
 
         self.news_urls = {
-            "kalerkantha": "https://www.kalerkantho.com/print-edition/first-page",
+            "kalerkantho": "https://www.kalerkantho.com/print-edition/first-page",
             "prothomalo": "https://www.prothomalo.com/",
         }
 
@@ -39,11 +39,11 @@ class Scraper:
         response = session.get(url)
         return response
 
-    # Scrapes kalerkantha
-    def scrape_kalerkantha(self):
-        """Scrape the newspaper website Daily Kalerkantha."""
+    # Scrapes kalerkantho
+    def scrape_kalerkantho(self):
+        """Scrape the newspaper website Daily kalerkantho."""
 
-        response = self.get_response(self.news_urls["kalerkantha"])
+        response = self.get_response(self.news_urls["kalerkantho"])
         if response:
             soup = BeautifulSoup(response.content, "lxml")
 
@@ -133,4 +133,4 @@ class Scraper:
 
 if __name__ == "__main__":
     s = Scraper()
-    print(s.scrape_prothomalo())
+    print(s.scrape_kalerkantho())
