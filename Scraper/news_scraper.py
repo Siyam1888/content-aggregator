@@ -23,6 +23,7 @@ class Scraper:
         self.news_urls = {
             "kalerkantho": "https://www.kalerkantho.com/print-edition/first-page",
             "prothomalo": "https://www.prothomalo.com/",
+            "dailystar": "https://www.thedailystar.net/newspaper",
         }
 
     # sends a request and returns a response
@@ -123,7 +124,22 @@ class Scraper:
     def scrape_dailystar(self):
         """Scrape the newspaper website Daily Star."""
 
-        pass
+        news_list = []
+
+        response = self.get_response(self.news_urls["dailystar"])
+        soup = BeautifulSoup(response.content, "lxml")
+
+        news_divs = soup.findAll("div", {"class": "list-content"})
+        for div in news_divs[:5]:
+            news_list.append(
+                {
+                    "headline": div.a.text,
+                    "link": div.a.attrs["href"],
+                    "summary": div.p.text,
+                }
+            )
+
+        return news_list
 
     def scrape_dailysun(self):
         """Scrape the newspaper website Daily Sun."""
@@ -133,4 +149,4 @@ class Scraper:
 
 if __name__ == "__main__":
     s = Scraper()
-    print(s.scrape_kalerkantho())
+    print(s.scrape_dailystar())
