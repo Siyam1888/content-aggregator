@@ -13,17 +13,15 @@ class Scraper:
             "Mozilla/5.0 (Windows; U; Windows NT 6.1; x64; fr; rv:1.9.2.13) Gecko/20101203 Firebird/3.6.13",
             "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
             "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201",
-            "Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16",
             "Mozilla/5.0 (Windows NT 5.2; RW; rv:7.0a1) Gecko/20091211 SeaMonkey/9.23a1pre",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
-            "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBDV/iPhone9,1;FBMD/iPhone;FBSN/iOS;FBSV/13.3.1;FBSS/2;FBID/phone;FBLC/en_US;FBOP/5;FBCR/]",
         ]
 
         self.news_urls = {
             "kalerkantho": "https://www.kalerkantho.com/print-edition/first-page",
             "prothomalo": "https://www.prothomalo.com/",
             "dailystar": "https://www.thedailystar.net/newspaper",
+            "jugantor": "https://www.jugantor.com/todays-paper/first-page",
         }
 
     # sends a request and returns a response
@@ -119,17 +117,30 @@ class Scraper:
     def scrape_jugantor(self):
         """Scrape the newspaper website Daily Jugantor."""
 
-        pass
+        news_list = []
+        response = self.get_response(self.news_urls["jugantor"])
+        soup = BeautifulSoup(response.content, "lxml")
+        lead_news = soup.find("div", {"id": "lead-news"})
+        a_tags = lead_news.findAll("a")
+
+        for a in a_tags:
+            news = {
+                "headline": a.text.strip(),
+                "link": a.attrs["href"],
+                "summary": None,
+            }
+            news_list.append(news)
+
+        return news_list
 
     def scrape_dailystar(self):
         """Scrape the newspaper website Daily Star."""
 
         news_list = []
-
         response = self.get_response(self.news_urls["dailystar"])
         soup = BeautifulSoup(response.content, "lxml")
-
         news_divs = soup.findAll("div", {"class": "list-content"})
+
         for div in news_divs[:5]:
             news_list.append(
                 {
@@ -149,4 +160,4 @@ class Scraper:
 
 if __name__ == "__main__":
     s = Scraper()
-    print(s.scrape_dailystar())
+    print(s.scrape_jugantor())
