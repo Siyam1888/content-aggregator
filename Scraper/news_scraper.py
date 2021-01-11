@@ -14,7 +14,6 @@ class Scraper:
             "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
             "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201",
             "Mozilla/5.0 (Windows NT 5.2; RW; rv:7.0a1) Gecko/20091211 SeaMonkey/9.23a1pre",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
         ]
 
         self.news_urls = {
@@ -22,6 +21,7 @@ class Scraper:
             "prothomalo": "https://www.prothomalo.com/",
             "dailystar": "https://www.thedailystar.net/newspaper",
             "jugantor": "https://www.jugantor.com/todays-paper/first-page",
+            "bd-pratidin": "https://www.bd-pratidin.com/first-page",
         }
 
     # sends a request and returns a response
@@ -114,6 +114,7 @@ class Scraper:
 
         return news_list
 
+    # Scrapes The Daily Jugantor
     def scrape_jugantor(self):
         """Scrape the newspaper website Daily Jugantor."""
 
@@ -127,12 +128,13 @@ class Scraper:
             news = {
                 "headline": a.text.strip(),
                 "link": a.attrs["href"],
-                "summary": None,
+                "summary": a.text.strip() + "...",
             }
             news_list.append(news)
 
         return news_list
 
+    # Scrapes The Daily Star
     def scrape_dailystar(self):
         """Scrape the newspaper website Daily Star."""
 
@@ -152,12 +154,51 @@ class Scraper:
 
         return news_list
 
-    def scrape_dailysun(self):
-        """Scrape the newspaper website Daily Sun."""
+    # scrapes the first page of Bangladesh Pratidin news paper
+    def scrape_bd_pratidin(self):
+        """Scrape the newspaper website Bangladesh Pratidin."""
 
+        news_list = []
+        response = self.get_response(self.news_urls["bd-pratidin"])
+        soup = BeautifulSoup(response.content, "lxml")
+
+        lead_news_div = soup.find("div", {"class": "lead-news-2nd"})
+        link = lead_news_div.a.attrs["href"]
+        link = (
+            "https://www.bd-pratidin.com/" + link
+            if not link.startswith("http")
+            else link
+        )
+        lead_news = {
+            "headline": lead_news_div.span.text,
+            "link": link,
+            "summary": lead_news_div.p.text,
+        }
+        news_list.append(lead_news)
+
+        secondary_news_divs = soup.find("div", {"class": "lead-news-3nd"}).findAll(
+            "div", {"class": "news-row"}
+        )
+        for div in secondary_news_divs[:4]:
+            headline = div.span.text
+            link = div.a.attrs["href"]
+            link = (
+                "https://www.bd-pratidin.com/" + link
+                if not link.startswith("http")
+                else link
+            )
+            summary = div.span.text
+
+            news = {"headline": headline, "link": link, "summary": summary}
+            news_list.append(news)
+
+        return news_list
+
+    # runs all the scrapers and stores the values in a dictionary
+    def scrape_all_news(self):
         pass
 
 
 if __name__ == "__main__":
     s = Scraper()
-    print(s.scrape_jugantor())
+    print(s.scrape_bd_pratidin())
