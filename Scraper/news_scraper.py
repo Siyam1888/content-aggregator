@@ -11,8 +11,9 @@ class Scraper:
     def __init__(self):
         self.headers_list = [
             "Mozilla/5.0 (Windows; U; Windows NT 6.1; x64; fr; rv:1.9.2.13) Gecko/20101203 Firebird/3.6.13",
-            "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
+            "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
             "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201",
+            "Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16",
             "Mozilla/5.0 (Windows NT 5.2; RW; rv:7.0a1) Gecko/20091211 SeaMonkey/9.23a1pre",
         ]
 
@@ -28,14 +29,12 @@ class Scraper:
     def get_response(self, url):
         """Take an url, send a request and return the response."""
 
-        session = requests.Session()
         HEADER = {
             "User-Agent": random.choice(self.headers_list),
             "X-Requested-With": "XMLHttpRequest",
             "Accept-Language": "bn",
         }
-        session.headers.update(HEADER)
-        response = session.get(url)
+        response = requests.get(url, headers=HEADER)
         return response
 
     # Scrapes kalerkantho
@@ -121,7 +120,7 @@ class Scraper:
         news_list = []
         response = self.get_response(self.news_urls["jugantor"])
         soup = BeautifulSoup(response.content, "lxml")
-        lead_news = soup.find("div", {"id": "lead-news"})
+        lead_news = soup.find("div", {"id": "lead-news", "class": "row"})
         a_tags = lead_news.findAll("a")
 
         for a in a_tags:
@@ -196,9 +195,26 @@ class Scraper:
 
     # runs all the scrapers and stores the values in a dictionary
     def scrape_all_news(self):
-        pass
+        """Run all the scraper functions and return the data as a dictionary"""
+        kalerkantha = self.scrape_kalerkantho()
+        prothomalo = self.scrape_prothomalo()
+        dailystar = self.scrape_dailystar()
+        bd_pratidin = self.scrape_bd_pratidin()
+        jugantor = self.scrape_jugantor()
+
+        news_dict = {
+            "kalerkantha": kalerkantha,
+            "prothomalo": prothomalo,
+            "jugantor": jugantor,
+            "dailystar": dailystar,
+            "bd_pratidin": bd_pratidin,
+        }
+
+        self.news_dict = news_dict
+        return news_dict
 
 
 if __name__ == "__main__":
     s = Scraper()
-    print(s.scrape_bd_pratidin())
+    s.scrape_all_news()
+    print(s.news_dict)
