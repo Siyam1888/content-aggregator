@@ -42,7 +42,7 @@ class Scraper:
         """Scrape the newspaper website Daily kalerkantho."""
 
         response = self.get_response(self.news_urls["kalerkantho"])
-        if response:
+        if response.ok:
             soup = BeautifulSoup(response.content, "lxml")
 
             # Top news
@@ -84,34 +84,35 @@ class Scraper:
 
         # Taking the response and parsing it
         response = self.get_response(self.news_urls["prothomalo"])
-        soup = BeautifulSoup(response.content, "lxml")
+        if response.ok:
+            soup = BeautifulSoup(response.content, "lxml")
 
-        # Scraping the primary headline
-        primary_news_div = soup.find("div", {"class": "organism1-m__text__1Qbhv"})
-        primary_news_headline_a = primary_news_div.find(
-            "a", {"class": "newsHeadline-m__title-link__1puEG"}
-        )
-        primary_news_summary_a = primary_news_div.find("a", {"class": ""})
-        primary_news = {
-            "headline": primary_news_headline_a.text,
-            "link": primary_news_headline_a.attrs["href"],
-            "summary": primary_news_summary_a.text,
-        }
-        news_list.append(primary_news)
-
-        # Other news scraping
-        news_with_no_image_div = soup.findAll("div", {"class": "news_with_no_image"})
-        for div in news_with_no_image_div:
-            headline_a = div.find("a", {"class": "newsHeadline-m__title-link__1puEG"})
-            summary_a = div.find("a", {"class": ""})
-            news = {
-                "headline": headline_a.text,
-                "link": headline_a.attrs["href"],
-                "summary": summary_a.text,
+            # Scraping the primary headline
+            primary_news_div = soup.find("div", {"class": "organism1-m__text__1Qbhv"})
+            primary_news_headline_a = primary_news_div.find(
+                "a", {"class": "newsHeadline-m__title-link__1puEG"}
+            )
+            primary_news_summary_a = primary_news_div.find("a", {"class": ""})
+            primary_news = {
+                "headline": primary_news_headline_a.text,
+                "link": primary_news_headline_a.attrs["href"],
+                "summary": primary_news_summary_a.text,
             }
-            news_list.append(news)
+            news_list.append(primary_news)
 
-        return news_list
+            # Other news scraping
+            news_with_no_image_div = soup.findAll("div", {"class": "news_with_no_image"})
+            for div in news_with_no_image_div:
+                headline_a = div.find("a", {"class": "newsHeadline-m__title-link__1puEG"})
+                summary_a = div.find("a", {"class": ""})
+                news = {
+                    "headline": headline_a.text,
+                    "link": headline_a.attrs["href"],
+                    "summary": summary_a.text,
+                }
+                news_list.append(news)
+
+            return news_list
 
     # Scrapes The Daily Jugantor
     def scrape_jugantor(self):
@@ -119,19 +120,20 @@ class Scraper:
 
         news_list = []
         response = self.get_response(self.news_urls["jugantor"])
-        soup = BeautifulSoup(response.content, "lxml")
-        lead_news = soup.find("div", {"id": "lead-news", "class": "row"})
-        a_tags = lead_news.findAll("a")
+        if response.ok:
+            soup = BeautifulSoup(response.content, "lxml")
+            lead_news = soup.find("div", {"id": "lead-news", "class": "row"})
+            a_tags = lead_news.findAll("a")
 
-        for a in a_tags:
-            news = {
-                "headline": a.text.strip(),
-                "link": a.attrs["href"],
-                "summary": a.text.strip() + "...",
-            }
-            news_list.append(news)
+            for a in a_tags:
+                news = {
+                    "headline": a.text.strip(),
+                    "link": a.attrs["href"],
+                    "summary": a.text.strip() + "...",
+                }
+                news_list.append(news)
 
-        return news_list
+            return news_list
 
     # Scrapes The Daily Star
     def scrape_dailystar(self):
@@ -139,19 +141,20 @@ class Scraper:
 
         news_list = []
         response = self.get_response(self.news_urls["dailystar"])
-        soup = BeautifulSoup(response.content, "lxml")
-        news_divs = soup.findAll("div", {"class": "list-content"})
+        if response.ok:
+            soup = BeautifulSoup(response.content, "lxml")
+            news_divs = soup.findAll("div", {"class": "list-content"})
 
-        for div in news_divs[:5]:
-            news_list.append(
-                {
-                    "headline": div.a.text,
-                    "link": div.a.attrs["href"],
-                    "summary": div.p.text,
-                }
-            )
+            for div in news_divs[:5]:
+                news_list.append(
+                    {
+                        "headline": div.a.text,
+                        "link": div.a.attrs["href"],
+                        "summary": div.p.text,
+                    }
+                )
 
-        return news_list
+            return news_list
 
     # scrapes the first page of Bangladesh Pratidin news paper
     def scrape_bd_pratidin(self):
@@ -159,39 +162,40 @@ class Scraper:
 
         news_list = []
         response = self.get_response(self.news_urls["bd-pratidin"])
-        soup = BeautifulSoup(response.content, "lxml")
+        if response.ok:
+            soup = BeautifulSoup(response.content, "lxml")
 
-        lead_news_div = soup.find("div", {"class": "lead-news-2nd"})
-        link = lead_news_div.a.attrs["href"]
-        link = (
-            "https://www.bd-pratidin.com/" + link
-            if not link.startswith("http")
-            else link
-        )
-        lead_news = {
-            "headline": lead_news_div.span.text,
-            "link": link,
-            "summary": lead_news_div.p.text,
-        }
-        news_list.append(lead_news)
-
-        secondary_news_divs = soup.find("div", {"class": "lead-news-3nd"}).findAll(
-            "div", {"class": "news-row"}
-        )
-        for div in secondary_news_divs[:4]:
-            headline = div.span.text
-            link = div.a.attrs["href"]
+            lead_news_div = soup.find("div", {"class": "lead-news-2nd"})
+            link = lead_news_div.a.attrs["href"]
             link = (
                 "https://www.bd-pratidin.com/" + link
                 if not link.startswith("http")
                 else link
             )
-            summary = div.span.text
+            lead_news = {
+                "headline": lead_news_div.span.text,
+                "link": link,
+                "summary": lead_news_div.p.text,
+            }
+            news_list.append(lead_news)
 
-            news = {"headline": headline, "link": link, "summary": summary}
-            news_list.append(news)
+            secondary_news_divs = soup.find("div", {"class": "lead-news-3nd"}).findAll(
+                "div", {"class": "news-row"}
+            )
+            for div in secondary_news_divs[:4]:
+                headline = div.span.text
+                link = div.a.attrs["href"]
+                link = (
+                    "https://www.bd-pratidin.com/" + link
+                    if not link.startswith("http")
+                    else link
+                )
+                summary = div.span.text
 
-        return news_list
+                news = {"headline": headline, "link": link, "summary": summary}
+                news_list.append(news)
+
+            return news_list
 
     # runs all the scrapers and stores the values in a dictionary
     def scrape_all_news(self):
