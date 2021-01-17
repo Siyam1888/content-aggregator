@@ -101,9 +101,13 @@ class Scraper:
             news_list.append(primary_news)
 
             # Other news scraping
-            news_with_no_image_div = soup.findAll("div", {"class": "news_with_no_image"})
+            news_with_no_image_div = soup.findAll(
+                "div", {"class": "news_with_no_image"}
+            )
             for div in news_with_no_image_div:
-                headline_a = div.find("a", {"class": "newsHeadline-m__title-link__1puEG"})
+                headline_a = div.find(
+                    "a", {"class": "newsHeadline-m__title-link__1puEG"}
+                )
                 summary_a = div.find("a", {"class": ""})
                 news = {
                     "headline": headline_a.text,
@@ -146,10 +150,17 @@ class Scraper:
             news_divs = soup.findAll("div", {"class": "list-content"})
 
             for div in news_divs[:5]:
+                link = div.a.attrs["href"]
+                link = (
+                    "https://www.thedailystar.net" + div.a.attrs["href"]
+                    if not link.startswith("http")
+                    else link
+                )
+
                 news_list.append(
                     {
                         "headline": div.a.text,
-                        "link": div.a.attrs["href"],
+                        "link": link,
                         "summary": div.p.text,
                     }
                 )
@@ -207,11 +218,41 @@ class Scraper:
         jugantor = self.scrape_jugantor()
 
         news_dict = {
-            "kalerkantha": kalerkantha,
-            "prothomalo": prothomalo,
-            "jugantor": jugantor,
-            "dailystar": dailystar,
-            "bd_pratidin": bd_pratidin,
+            "kalerkantho": {
+                "info": {
+                    "name": "Daily Kalerkantho",
+                    "url": self.news_urls["kalerkantho"],
+                },
+                "news": kalerkantha,
+            },
+            "prothomalo": {
+                "info": {
+                    "name": "Daily Prothomalo",
+                    "url": self.news_urls["prothomalo"],
+                },
+                "news": prothomalo,
+            },
+            "jugantor": {
+                "info": {
+                    "name": "Daily Jugantor",
+                    "url": self.news_urls["jugantor"],
+                },
+                "news": jugantor,
+            },
+            "dailystar": {
+                "info": {
+                    "name": "The Daily Star",
+                    "url": self.news_urls["dailystar"],
+                },
+                "news": dailystar,
+            },
+            "bd-pratidin": {
+                "info": {
+                    "name": "Bangladesh Pratidin",
+                    "url": self.news_urls["bd-pratidin"],
+                },
+                "news": bd_pratidin,
+            },
         }
 
         self.news_dict = news_dict

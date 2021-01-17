@@ -1,13 +1,13 @@
 ## Task 1
 - [x] Select some news websites to scrape
 - [x] use reuquests and BeautifulSoup to scrape the data
+- [x] Save the data to a json file and serve it
+- [ ] find a way to schedule the scraping task on the web server (celery, apsheduler)
 - [ ] Save the data to a database 
     1. Sources Table: Source id, source_name, source_news
     2. News Table: source_id, headline, link to the news, summary
     3. DO A SHORT RESEARCH ON DATABASE DESIGN
 - [ ] Fetch data from the database and serve it with a simple UI
-
-- [ ] find a way to schedule the scraping task on the web server (celery, apsheduler)
 
 
 ## Task 2

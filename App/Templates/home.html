@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bn en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <title>HOME PAGE</title>
+</head>
+<style>
+    body{
+        padding: 20px;
+        margin: 20px;
+    }
+    a {
+        color: #000;
+        text-decoration: none   ;
+    }
+    .flex-container {
+        display: flex;
+      }
+      
+</style>
+<body class='container'>
+    {% include 'navbar.html' %}
+    <div class="flex-container">
+    {% for source in news %}
+        <div class="card" style="width: 24rem;">
+            <div class="card-header"><h2>{{news[source]['info']['name']}}</h2></div>
+            <ul class="list-group list-group-flush">
+            {% for group in news[source]['news'] %}
+                <li class="list-group-item"><a href="{{group['link']}}" title="{{group['summary']}}">{{group['headline']}}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    </div>
+</body>
+</html>
+
