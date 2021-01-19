@@ -17,11 +17,20 @@
     }
     .flex-container {
         display: flex;
+        flex-direction: row;
+      }
+      
+      /* Responsive layout - makes a one column layout instead of a two-column layout */
+      @media (max-width: 800px) {
+        .flex-container {
+          flex-direction: column;
+        }
       }
       
 </style>
 <body class='container'>
     {% include 'navbar.html' %}
+    <p>Last Updated: {{ updated_at }}</p>
     <div class="flex-container">
     {% for source in news %}
         <div class="card" style="width: 24rem;">
@@ -34,6 +43,8 @@
         </div>
     {% endfor %}
     </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 </html>
 
