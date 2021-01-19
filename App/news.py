@@ -3,13 +3,15 @@ from flask import render_template, Response
 from scraper import Scraper
 import time
 import json
+from pytz import timezone
 from datetime import datetime
 from threading import Thread
 
 
 # creating the flask app
 app = Flask(__name__, template_folder='./Templates')
-updated_at = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+bst = timezone('ASIA/DHAKA')
+updated_at = bst.localize(datetime.now()).strftime('%d/%m/%Y %H:%M:%S')
 data = dict()
 
 
@@ -18,8 +20,7 @@ def scrape_data():
     global updated_at, data
     scraper = Scraper()
     data = scraper.scrape_all_news()
-    # print('-' * 50, 'Scraper Ran', '-'*50)
-    updated_at = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+    updated_at = bst.localize(datetime.now()).strftime('%d/%m/%Y %H:%M:%S')
 
 
 # infinite loop for scraping data with an interval
@@ -28,6 +29,8 @@ def scraper_loop():
     while True:
         scrape_data()
         time.sleep(60*60)
+
+
 
 
 @app.route('/')
@@ -46,5 +49,5 @@ scraper_thread = Thread(target=scraper_loop)
 scraper_thread.start()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
     
