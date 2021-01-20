@@ -11,7 +11,7 @@ from threading import Thread
 # creating the flask app
 app = Flask(__name__, template_folder='./Templates')
 bst = timezone('ASIA/DHAKA')
-updated_at = bst.localize(datetime.now()).strftime('%d/%m/%Y %H:%M:%S')
+updated_at = datetime.now(bst).strftime('%d/%m/%Y %H:%M:%S')
 data = dict()
 
 
@@ -20,7 +20,7 @@ def scrape_data():
     global updated_at, data
     scraper = Scraper()
     data = scraper.scrape_all_news()
-    updated_at = bst.localize(datetime.now()).strftime('%d/%m/%Y %H:%M:%S')
+    updated_at = datetime.now(bst).strftime('%d/%m/%Y %H:%M:%S')
 
 
 # infinite loop for scraping data with an interval
