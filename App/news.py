@@ -38,8 +38,13 @@ def home():
     return render_template('home.html', news=data, updated_at=updated_at)
 
 
+@app.route('/sources')
+def sources():
+    source_list = [data[source]["info"] for source in data]
+    return render_template('sources.html', source_list=source_list)
+
 @app.route('/api/news')
-def run_scraper():
+def api():
     data_json = json.dumps(data, ensure_ascii=False)
     return Response(data_json, mimetype='application/json')
 
