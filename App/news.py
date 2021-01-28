@@ -25,12 +25,9 @@ def scrape_data():
 
 # infinite loop for scraping data with an interval
 def scraper_loop():
-
     while True:
         scrape_data()
         time.sleep(60*60)
-
-
 
 
 @app.route('/')
@@ -42,6 +39,12 @@ def home():
 def sources():
     source_list = [data[source]["info"] for source in data]
     return render_template('sources.html', source_list=source_list)
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 
 @app.route('/api/news')
 def api():

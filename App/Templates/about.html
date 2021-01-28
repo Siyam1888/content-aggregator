@@ -7,26 +7,14 @@
     <meta name="google-site-verification" content="MesdzW7gYZyRP5wrGf-2ah3CQZ0Eu2LhHjdfTnA2SAs" />
     <script data-ad-client="ca-pub-7839236075213161" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <title>Sources Page</title>
+    <title>About Page</title>
 </head>
 <body>
-    <style>
-        a {
-            color: #000;
-            text-decoration: none   ;
-        }
-        .list-group-item-action{
-            text-align: center;
-        }
-    </style>
     {% include 'navbar.html' %}
-    <div class="list-group">
-        <li class="list-group-item list-group-item-action bg-secondary text-light display-6">NEWS SOURCES</li>
-        {% for source in source_list %}
-            <a class="list-group-item list-group-item-action large" href="{{source['url']}}" target="_blank" rel="noopener noreferrer">{{source['name']}}</a>
-        {% endfor %}
+    <div class="container">
+        <h1>This is the about page...<h1>
     </div>
-
+    
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
