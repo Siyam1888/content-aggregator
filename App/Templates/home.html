@@ -7,7 +7,7 @@
     <meta name="google-site-verification" content="MesdzW7gYZyRP5wrGf-2ah3CQZ0Eu2LhHjdfTnA2SAs" />
     <script data-ad-client="ca-pub-7839236075213161" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <title>NEWS PAGE</title>
+    <title lang="en">NEWS PAGE</title>
 </head>
 <body>
 <style>
@@ -50,7 +50,7 @@
     <div class="flex-container">
     {% for source in news %}
         <div class="card">
-        <a class="card-header list-group-item-action" href="{{news[source]['info']['url']}}" target="_blank" rel="noopener noreferrer"><h2>{{news[source]['info']['name']}}</h2></a>
+        <a class="card-header list-group-item-action" href="{{news[source]['info']['url']}}" target="_blank" rel="noopener noreferrer"><h2 lang="en">{{news[source]['info']['name']}}</h2></a>
             <div class="list-group list-group-flush">
             {% for group in news[source]['news'] %}
                 <a class="list-group-item list-group-item-action" href="{{group['link']}}" target="_blank" rel="noopener noreferrer" title="{{group['summary']}}">{{group['headline']}}</a>
