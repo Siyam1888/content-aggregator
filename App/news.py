@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder='./Templates')
 
 
 def get_data():
-    with open('data.json', 'r', encoding='utf-8') as f:
+    with open('App/data.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
         updated_at = data.get('updated_at')
         del data['updated_at']
