@@ -1,42 +1,29 @@
 from flask import Flask
 from flask import render_template, Response
-from scraper import Scraper
-import time
 import json
-from pytz import timezone
-from datetime import datetime
-from threading import Thread
 
 
 # creating the flask app
 app = Flask(__name__, template_folder='./Templates')
-bst = timezone('ASIA/DHAKA')
-updated_at = datetime.now(bst).strftime('%d/%m/%Y %H:%M:%S')
-data = dict()
 
 
-# scrapes the data and saves it to a json file
-def scrape_data():
-    global updated_at, data
-    scraper = Scraper()
-    data = scraper.scrape_all_news()
-    updated_at = datetime.now(bst).strftime('%d/%m/%Y %H:%M:%S')
-
-
-# infinite loop for scraping data with an interval
-def scraper_loop():
-    while True:
-        scrape_data()
-        time.sleep(60*60)
+def get_data():
+    with open('data.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        updated_at = data.get('updated_at')
+        del data['updated_at']
+    return (data, updated_at)
 
 
 @app.route('/')
 def home():
+    data, updated_at = get_data()
     return render_template('home.html', news=data, updated_at=updated_at)
 
 
 @app.route('/sources')
 def sources():
+    data, updated_at = get_data()
     source_list = [data[source]["info"] for source in data]
     return render_template('sources.html', source_list=source_list)
 
@@ -48,13 +35,11 @@ def about():
 
 @app.route('/api/news')
 def api():
+    data, updated_at = get_data()
     data_json = json.dumps(data, ensure_ascii=False)
     return Response(data_json, mimetype='application/json')
 
 
-# creating and starting the scraper loop thread
-scraper_thread = Thread(target=scraper_loop)
-scraper_thread.start()
 
 if __name__ == '__main__':
     app.run()
